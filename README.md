@@ -1,10 +1,11 @@
 # Shared Game Images
 
-A minimal static site to view and share direct links to images for online games including Tower Unite, VRChat, and others. Host on GitHub Pages and quickly render images from your media folder.
+A minimal static site to view and share direct links to images for any online game session. Works great for Tower Unite, VRChat, GTA RP servers, D&D maps, clan events, or any place you need a quick image host. Deploy to GitHub Pages and render straight from your `media/` folder.
 
 ## Features
-- Paste an image URL and display it instantly
-- Auto-load via query param: `?src=https://...`
+- Paste or deep-link to an image and display it instantly
+- Auto-load via query param: `?src=media/your-image.jpg`
+- Gallery auto-lists everything in `media/` (fetched via GitHub API)
 - Quick actions: open original, copy link, download
 - No backend — plain HTML/CSS/JS
 
@@ -12,9 +13,14 @@ A minimal static site to view and share direct links to images for online games 
 - Place your images in the `media/` folder (committed to the repo) to serve them via GitHub Pages.
 - The viewer only serves local media files. Use relative paths like `?src=media/your-image.jpg`.
 - Supported image types: png, jpg, jpeg, gif, webp, avif, bmp.
-- The page will automatically list and thumbnail everything in `media/` using the GitHub contents API. Click a thumbnail to view.
+- The page automatically lists and thumbnails everything in `media/` via the GitHub contents API. Click a thumbnail to view.
 
 > Note: External URLs are intentionally disallowed; keep assets in `media/`.
+
+## Rebranding for your game or group
+- Update the page title, meta description, and header blurb in `index.html` to match your community or server.
+- Add your own images or logos to `media/` and reference them with `?src=media/your-logo.png`.
+- If you fork this repo, adjust the `owner`, `repo`, and `branch` constants in `script.js` so the gallery pulls from your project instead of `M1XZG/shared-game-images`.
 
 ## GitHub Pages Deployment
 You can deploy from the `main` branch root or `/docs`. This repo is ready to serve from root.
