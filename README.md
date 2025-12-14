@@ -2,6 +2,8 @@
 
 A minimal static site to view and share direct links to images for any online game session. Works great for Tower Unite, VRChat, GTA RP servers, D&D maps, clan events, or any place you need a quick image host. Deploy to GitHub Pages and render straight from your `media/` folder.
 
+**Live:** https://M1XZG.github.io/shared-game-images/
+
 ## Features
 - Paste or deep-link to an image and display it instantly
 - Auto-load via query param: `?src=media/your-image.jpg`
