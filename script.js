@@ -24,7 +24,7 @@ async function loadGallery() {
   const grid = document.getElementById('gallery-grid');
   const status = document.getElementById('gallery-status');
   const owner = 'M1XZG';
-  const repo = 'towerunite-images';
+  const repo = 'shared-game-images';
   const branch = 'main';
   try {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/media?ref=${branch}`);

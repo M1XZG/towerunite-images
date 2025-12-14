@@ -1,6 +1,6 @@
-# Tower Unite Images
+# Shared Game Images
 
-A minimal static site to view and share direct links to images, intended for Tower Unite use. Host on GitHub Pages and quickly render images from external URLs.
+A minimal static site to view and share direct links to images for online games including Tower Unite, VRChat, and others. Host on GitHub Pages and quickly render images from your media folder.
 
 ## Features
 - Paste an image URL and display it instantly
