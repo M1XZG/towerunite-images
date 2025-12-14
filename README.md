@@ -11,6 +11,7 @@ A minimal static site to view and share direct links to images, intended for Tow
 ## Usage
 - Place your images in the `media/` folder (committed to the repo) to serve them via GitHub Pages.
 - The viewer only serves local media files. Use relative paths like `?src=media/your-image.jpg`.
+- Supported image types: png, jpg, jpeg, gif, webp, avif, bmp.
 - The page will automatically list and thumbnail everything in `media/` using the GitHub contents API. Click a thumbnail to view.
 
 > Note: External URLs are intentionally disallowed; keep assets in `media/`.

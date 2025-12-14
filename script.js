@@ -9,6 +9,10 @@ function setError(msg) {
   error.classList.toggle('hidden', !msg);
 }
 
+function isImageFile(name) {
+  return /\.(png|jpe?g|gif|webp|avif|bmp)$/i.test(name);
+}
+
 function mediaUrl(filename) {
   // Build a URL relative to the current page for images in media/
   return new URL(filename, window.location.href).toString();
@@ -24,7 +28,7 @@ async function loadGallery() {
     const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/media?ref=${branch}`);
     if (!res.ok) throw new Error(`GitHub API error ${res.status}`);
     const files = await res.json();
-    const images = files.filter((f) => f.type === 'file');
+    const images = files.filter((f) => f.type === 'file' && isImageFile(f.name));
     if (!images.length) {
       status.textContent = 'No images yet. Add files to media/ and refresh.';
       grid.innerHTML = '<div class="empty">No images in media/.</div>';
@@ -94,8 +98,12 @@ function init() {
 
   const initial = qs('src');
   if (initial) {
-    input.value = initial;
-    showViewer(initial);
+    if (isImageFile(initial)) {
+      input.value = initial;
+      showViewer(initial);
+    } else {
+      setError('Unsupported image type. Allowed: png, jpg, jpeg, gif, webp, avif, bmp.');
+    }
   }
 
   loadGallery();
@@ -108,6 +116,10 @@ function init() {
     // Enforce media/ prefix to keep all images local
     if (!finalUrl.startsWith('media/')) {
       setError('Images must be in the media/ folder (use media/your-image.jpg).');
+      return;
+    }
+    if (!isImageFile(finalUrl)) {
+      setError('Unsupported image type. Allowed: png, jpg, jpeg, gif, webp, avif, bmp.');
       return;
     }
     const params = new URLSearchParams(window.location.search);
