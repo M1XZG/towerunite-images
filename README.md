@@ -1,4 +1,13 @@
+
 # Shared Game Images
+
+## 🖼️ Automated Poster Replacement Script
+
+This repository includes an automation tool for managing VRChat world poster images:
+
+- **[replace_posters.py](scripts/replace_posters.py)**: A Python script that automatically replaces poster images for each world with new images from a pool, ensuring no duplicates within a world and avoiding reusing the same image for a poster (when possible).
+	- See the detailed [script documentation](scripts/README.md) for flow, logic, and usage instructions.
+
 
 A minimal static site to view and share direct links to images for any online game session. Works great for Tower Unite, VRChat, GTA RP servers, D&D maps, clan events, or any place you need a quick image host. Deploy to GitHub Pages and render straight from your `media/` folder.
 
