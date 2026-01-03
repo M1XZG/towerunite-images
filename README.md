@@ -1,5 +1,15 @@
-
 # Shared Game Images
+
+# Repo Stats
+
+<div align="center">
+	<p>
+		<img src="https://img.shields.io/github/issues-pr/M1XZG/shared-game-images?label=Open%20PRs&color=0A84FF" alt="Open pull requests" />
+		<img src="https://img.shields.io/github/issues-pr-closed/M1XZG/shared-game-images?label=Merged%20PRs&color=6f42c1" alt="Merged pull requests" />
+		<img src="https://img.shields.io/github/last-commit/M1XZG/shared-game-images?label=Last%20Commit&color=2cbe4e" alt="Last commit" />
+		<img src="https://img.shields.io/github/repo-size/M1XZG/shared-game-images?label=Repo%20Size&color=999999" alt="Repository size" />
+	</p>
+</div>
 
 ## 🖼️ Automated Poster Replacement Script
 
