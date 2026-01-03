@@ -27,18 +27,30 @@ async function loadGallery() {
   const repo = 'shared-game-images';
   const branch = 'main';
   try {
-    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/media?ref=${branch}`);
-    if (!res.ok) throw new Error(`GitHub API error ${res.status}`);
-    const files = await res.json();
-    const images = files.filter((f) => f.type === 'file' && isImageFile(f.name));
-    if (!images.length) {
-      status.textContent = 'No images yet. Add files to media/ and refresh.';
-      grid.innerHTML = '<div class="empty">No images in media/.</div>';
+    // Fetch images from media/
+    const mediaRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/media?ref=${branch}`);
+    if (!mediaRes.ok) throw new Error(`GitHub API error ${mediaRes.status} (media/)`);
+    const mediaFiles = await mediaRes.json();
+    const mediaImages = mediaFiles.filter((f) => f.type === 'file' && isImageFile(f.name)).map(f => ({...f, _source: 'media'}));
+
+    // Fetch images from image-pool/portrait/
+    const poolRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/image-pool/portrait?ref=${branch}`);
+    let poolImages = [];
+    if (poolRes.ok) {
+      const poolFiles = await poolRes.json();
+      poolImages = poolFiles.filter((f) => f.type === 'file' && isImageFile(f.name)).map(f => ({...f, _source: 'image-pool'}));
+    }
+
+    // Merge and display
+    const allImages = [...mediaImages, ...poolImages];
+    if (!allImages.length) {
+      status.textContent = 'No images yet. Add files to media/ or image-pool/portrait/ and refresh.';
+      grid.innerHTML = '<div class="empty">No images in media/ or image-pool/portrait/.</div>';
       return;
     }
-    status.textContent = `Loaded ${images.length} file(s) from media/`;
+    status.textContent = `Loaded ${allImages.length} file(s) from media/ and image-pool/portrait/`;
     grid.innerHTML = '';
-    images.forEach((file) => {
+    allImages.forEach((file) => {
       const card = document.createElement('div');
       card.className = 'thumb';
       const img = document.createElement('img');
@@ -46,7 +58,7 @@ async function loadGallery() {
       img.alt = file.name;
       const label = document.createElement('div');
       label.className = 'thumb-name';
-      label.textContent = file.name;
+      label.textContent = file.name + (file._source === 'image-pool' ? ' (pool)' : '');
       card.appendChild(img);
       card.appendChild(label);
       card.addEventListener('click', () => {
@@ -62,7 +74,7 @@ async function loadGallery() {
       grid.appendChild(card);
     });
   } catch (err) {
-    status.textContent = 'Unable to load media list (GitHub API). Add images to media/ and try again.';
+    status.textContent = 'Unable to load image list (GitHub API). Add images to media/ or image-pool/portrait/ and try again.';
     console.error(err);
   }
 }
