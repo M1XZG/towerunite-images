@@ -49,42 +49,78 @@ async function loadGallery() {
       landscapeImages = landscapeFiles.filter((f) => f.type === 'file' && isImageFile(f.name)).map(f => ({...f, _source: 'image-pool/landscape'}));
     }
 
-    // Merge and display
-    const allImages = [...mediaImages, ...portraitImages, ...landscapeImages];
-    if (!allImages.length) {
-      status.textContent = 'No images yet. Add files to media/, image-pool/portrait/, or image-pool/landscape/ and refresh.';
-      grid.innerHTML = '<div class="empty">No images in media/, image-pool/portrait/, or image-pool/landscape/.</div>';
-      return;
-    }
-    status.textContent = `Loaded ${allImages.length} file(s) from media/, image-pool/portrait/, and image-pool/landscape/`;
-    grid.innerHTML = '';
-    allImages.forEach((file) => {
-      const card = document.createElement('div');
-      card.className = 'thumb';
-      const img = document.createElement('img');
-      img.src = mediaUrl(file.path);
-      img.alt = file.name;
-      const label = document.createElement('div');
-      label.className = 'thumb-name';
-      let poolLabel = '';
-      if (file._source === 'image-pool/portrait') poolLabel = ' (portrait)';
-      else if (file._source === 'image-pool/landscape') poolLabel = ' (landscape)';
-      else if (file._source === 'media') poolLabel = '';
-      label.textContent = file.name + poolLabel;
-      card.appendChild(img);
-      card.appendChild(label);
-      card.addEventListener('click', () => {
-        const url = file.path;
-        const params = new URLSearchParams(window.location.search);
-        params.set('src', url);
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        history.replaceState(null, '', newUrl);
-        document.getElementById('src').value = url;
-        showViewer(url);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Separate portrait/media and landscape images
+    const portraitAndMediaImages = [...mediaImages, ...portraitImages];
+    const grid = document.getElementById('gallery-grid');
+    const landscapeGrid = document.getElementById('landscape-gallery-grid');
+    const landscapeStatus = document.getElementById('landscape-gallery-status');
+
+    // Portrait/media section
+    if (!portraitAndMediaImages.length) {
+      status.textContent = 'No images yet. Add files to media/ or image-pool/portrait/ and refresh.';
+      grid.innerHTML = '<div class="empty">No images in media/ or image-pool/portrait/.</div>';
+    } else {
+      status.textContent = `Loaded ${portraitAndMediaImages.length} file(s) from media/ and image-pool/portrait/`;
+      grid.innerHTML = '';
+      portraitAndMediaImages.forEach((file) => {
+        const card = document.createElement('div');
+        card.className = 'thumb';
+        const img = document.createElement('img');
+        img.src = mediaUrl(file.path);
+        img.alt = file.name;
+        const label = document.createElement('div');
+        label.className = 'thumb-name';
+        let poolLabel = '';
+        if (file._source === 'image-pool/portrait') poolLabel = ' (portrait)';
+        else if (file._source === 'media') poolLabel = '';
+        label.textContent = file.name + poolLabel;
+        card.appendChild(img);
+        card.appendChild(label);
+        card.addEventListener('click', () => {
+          const url = file.path;
+          const params = new URLSearchParams(window.location.search);
+          params.set('src', url);
+          const newUrl = `${window.location.pathname}?${params.toString()}`;
+          history.replaceState(null, '', newUrl);
+          document.getElementById('src').value = url;
+          showViewer(url);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        grid.appendChild(card);
       });
-      grid.appendChild(card);
-    });
+    }
+
+    // Landscape section
+    if (!landscapeImages.length) {
+      landscapeStatus.textContent = 'No landscape images yet. Add files to image-pool/landscape/ and refresh.';
+      landscapeGrid.innerHTML = '<div class="empty">No images in image-pool/landscape/.</div>';
+    } else {
+      landscapeStatus.textContent = `Loaded ${landscapeImages.length} landscape image(s) from image-pool/landscape/`;
+      landscapeGrid.innerHTML = '';
+      landscapeImages.forEach((file) => {
+        const card = document.createElement('div');
+        card.className = 'thumb landscape';
+        const img = document.createElement('img');
+        img.src = mediaUrl(file.path);
+        img.alt = file.name;
+        const label = document.createElement('div');
+        label.className = 'thumb-name';
+        label.textContent = file.name + ' (landscape)';
+        card.appendChild(img);
+        card.appendChild(label);
+        card.addEventListener('click', () => {
+          const url = file.path;
+          const params = new URLSearchParams(window.location.search);
+          params.set('src', url);
+          const newUrl = `${window.location.pathname}?${params.toString()}`;
+          history.replaceState(null, '', newUrl);
+          document.getElementById('src').value = url;
+          showViewer(url);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        landscapeGrid.appendChild(card);
+      });
+    }
   } catch (err) {
     status.textContent = 'Unable to load image list (GitHub API). Add images to media/, image-pool/portrait/, or image-pool/landscape/ and try again.';
     console.error(err);
