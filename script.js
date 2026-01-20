@@ -34,21 +34,29 @@ async function loadGallery() {
     const mediaImages = mediaFiles.filter((f) => f.type === 'file' && isImageFile(f.name)).map(f => ({...f, _source: 'media'}));
 
     // Fetch images from image-pool/portrait/
-    const poolRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/image-pool/portrait?ref=${branch}`);
-    let poolImages = [];
-    if (poolRes.ok) {
-      const poolFiles = await poolRes.json();
-      poolImages = poolFiles.filter((f) => f.type === 'file' && isImageFile(f.name)).map(f => ({...f, _source: 'image-pool'}));
+    const portraitRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/image-pool/portrait?ref=${branch}`);
+    let portraitImages = [];
+    if (portraitRes.ok) {
+      const portraitFiles = await portraitRes.json();
+      portraitImages = portraitFiles.filter((f) => f.type === 'file' && isImageFile(f.name)).map(f => ({...f, _source: 'image-pool/portrait'}));
+    }
+
+    // Fetch images from image-pool/landscape/
+    const landscapeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/image-pool/landscape?ref=${branch}`);
+    let landscapeImages = [];
+    if (landscapeRes.ok) {
+      const landscapeFiles = await landscapeRes.json();
+      landscapeImages = landscapeFiles.filter((f) => f.type === 'file' && isImageFile(f.name)).map(f => ({...f, _source: 'image-pool/landscape'}));
     }
 
     // Merge and display
-    const allImages = [...mediaImages, ...poolImages];
+    const allImages = [...mediaImages, ...portraitImages, ...landscapeImages];
     if (!allImages.length) {
-      status.textContent = 'No images yet. Add files to media/ or image-pool/portrait/ and refresh.';
-      grid.innerHTML = '<div class="empty">No images in media/ or image-pool/portrait/.</div>';
+      status.textContent = 'No images yet. Add files to media/, image-pool/portrait/, or image-pool/landscape/ and refresh.';
+      grid.innerHTML = '<div class="empty">No images in media/, image-pool/portrait/, or image-pool/landscape/.</div>';
       return;
     }
-    status.textContent = `Loaded ${allImages.length} file(s) from media/ and image-pool/portrait/`;
+    status.textContent = `Loaded ${allImages.length} file(s) from media/, image-pool/portrait/, and image-pool/landscape/`;
     grid.innerHTML = '';
     allImages.forEach((file) => {
       const card = document.createElement('div');
@@ -58,7 +66,11 @@ async function loadGallery() {
       img.alt = file.name;
       const label = document.createElement('div');
       label.className = 'thumb-name';
-      label.textContent = file.name + (file._source === 'image-pool' ? ' (pool)' : '');
+      let poolLabel = '';
+      if (file._source === 'image-pool/portrait') poolLabel = ' (portrait)';
+      else if (file._source === 'image-pool/landscape') poolLabel = ' (landscape)';
+      else if (file._source === 'media') poolLabel = '';
+      label.textContent = file.name + poolLabel;
       card.appendChild(img);
       card.appendChild(label);
       card.addEventListener('click', () => {
@@ -74,7 +86,7 @@ async function loadGallery() {
       grid.appendChild(card);
     });
   } catch (err) {
-    status.textContent = 'Unable to load image list (GitHub API). Add images to media/ or image-pool/portrait/ and try again.';
+    status.textContent = 'Unable to load image list (GitHub API). Add images to media/, image-pool/portrait/, or image-pool/landscape/ and try again.';
     console.error(err);
   }
 }
