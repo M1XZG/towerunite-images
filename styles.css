@@ -52,6 +52,7 @@ footer { opacity: 0.6; text-align: center; }
 	height: 100%;
 	object-fit: contain;
 	display: block;
+	transform: rotate(-90deg);
 }
 .thumb { position: relative; border: 1px solid #1f2937; border-radius: 10px; overflow: hidden; background: #0b1220; cursor: pointer; min-height: 140px; display: grid; place-items: center; }
 .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
