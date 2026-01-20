@@ -27,30 +27,31 @@ footer { opacity: 0.6; text-align: center; }
 .gallery-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 10px; }
 
-/* Landscape gallery: 2 columns, larger, uncropped */
-#landscape-gallery-grid.gallery-grid {
-	grid-template-columns: repeat(2, 1fr);
-	gap: 24px;
+/* Landscape table for 2-up images, full format */
+.landscape-table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+	margin-top: 10px;
 }
-
-#landscape-gallery-grid .thumb.landscape {
-	min-height: 350px;
-	background: #0b1220;
+.landscape-table td {
+	padding: 12px;
+	vertical-align: middle;
+}
+.landscape-cell {
+	height: clamp(140px, 28vh, 260px);
+	border-radius: 12px;
+	overflow: hidden;
+	background: rgba(255,255,255,0.03);
 	display: flex;
-	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 }
-
-#landscape-gallery-grid .thumb.landscape img {
-	transform: rotate(-90deg);
-	max-width: 90vh;
-	max-height: 60vw;
-	width: auto;
-	height: auto;
+.landscape-cell img {
+	width: 100%;
+	height: 100%;
 	object-fit: contain;
 	display: block;
-	margin: 0 auto;
 }
 .thumb { position: relative; border: 1px solid #1f2937; border-radius: 10px; overflow: hidden; background: #0b1220; cursor: pointer; min-height: 140px; display: grid; place-items: center; }
 .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
